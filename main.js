@@ -2,6 +2,8 @@ const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const Menu = electron.Menu
+const dialog = require('electron').dialog
+
 const path = require('path')
 const url = require('url')
 const menuTemplate = require('./menu_template.js')
@@ -44,6 +46,9 @@ app.on('ready', () => {
   const menu = Menu.buildFromTemplate(menuTemplate.getTemplate())
   Menu.setApplicationMenu(menu)
   createWindow();
+  let imgSrc = dialog.showOpenDialog({properties: ['openFile']})[0]
+  indexWin.webContents.send('img-src', imgSrc);
+
 })
 
 // Quit when all windows are closed.

@@ -75,3 +75,8 @@ img {
     right: 0;
     z-index: -1;
 }
+
+#scale_btn:hover {
+  cursor: default;
+  background-color: #E0E1E2;
+}

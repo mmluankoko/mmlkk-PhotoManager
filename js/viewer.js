@@ -1,29 +1,40 @@
-let src = 'testsmall.png'
-// let src = 'image.png'
+var ipc = require('electron').ipcRenderer;
 let oriWidth, oriHeight, imgWidth, imgHeight, svgWidth, svgHeight, x, y
-let scale_btnj = $('#scale_btn');
-let svgj = $('svg')
-let svg = svgj[0]
-let svgimg = document.createElementNS('http://www.w3.org/2000/svg','image')
-let scale = 100
-let zoomed = false
-let img = new Image()
-img.src = src
-img.onload = () => {
+let svg, svgj, img, svgimg, scale_btnj, src
+let scale, zoomed
+
+ipc.on('img-src', (event, imgSrc) => {
+  if (imgSrc)
+    init(imgSrc)
+})
+
+function init(imgSrc){
+  src = imgSrc
+  scale_btnj = $('#scale_btn');
+  svgj = $('svg')
+  svg = svgj[0]
+  svgimg = document.createElementNS('http://www.w3.org/2000/svg','image')
+  scale = 100
   zoomed = false
-  setOriDim()
-  setSvgDim()
-  setDefaultScale()
-  setImgDim()
-  setImgPos()
-  setImg()
-  svgj.append(svgimg)
+  img = new Image()
+  img.src = src
+  img.src = src
+  img.onload = () => {
+    zoomed = false
+    setOriDim()
+    setSvgDim()
+    setDefaultScale()
+    setImgDim()
+    setImgPos()
+    setImg()
+    svgj.append(svgimg)
+  }
+  $(window).resize(_.throttle(resizeHandler, 100))
+  $('#zoomin_btn').click(zoomin)
+  $('#zoomout_btn').click(zoomout)
+  $('#actual_btn').click(actual)
+  $('#fit_btn').click(fit)
 }
-$(window).resize(_.throttle(resizeHandler, 100))
-$('#zoomin_btn').click(zoomin)
-$('#zoomout_btn').click(zoomout)
-$('#actual_btn').click(actual)
-$('#fit_btn').click(fit)
 
 function setOriDim(){
   oriWidth = img.width
@@ -71,6 +82,7 @@ function setImg(){
   svgimg.setAttributeNS(null,'x', x.toString())
   svgimg.setAttributeNS(null,'y', y.toString())
   svgimg.setAttributeNS(null, 'visibility', 'visible')
+  // svgimg.setAttributeNS(null, 'transform', 'rotate(45 '+x+' '+y+')')
   setDisplay()
 }
 
