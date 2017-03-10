@@ -8,41 +8,32 @@ const menuTemplate = require('./menu_template.js')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
-
-
-
-
-
-
-
-
-
+let indexWin, viewerWin
 
 function createWindow () {
   // Create the browser window.
-  win = new BrowserWindow({width: 800, height: 600,
+  indexWin = new BrowserWindow({width: 800, height: 600,
                            minWidth: 800, minHeight: 600,
                            frame: false, titleBarStyle: 'hidden',
                            title: '', show: false})
-  win.show()
+  indexWin.show()
 
   // and load the index.html of the app.
-  win.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
+  indexWin.loadURL(url.format({
+    pathname: path.join(__dirname, 'viewer.html'),
     protocol: 'file:',
     slashes: true
   }))
 
   // Open the DevTools.
-  win.webContents.openDevTools()
+  indexWin.webContents.openDevTools()
 
   // Emitted when the window is closed.
-  win.on('closed', () => {
+  indexWin.on('closed', () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    win = null
+    indexWin = null
   })
 }
 
@@ -67,7 +58,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (win === null) {
+  if (indexWin === null) {
     createWindow()
   }
 })

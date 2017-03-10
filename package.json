@@ -19,5 +19,8 @@
   "homepage": "https://github.com/mmluankoko/mmlkk-PhotoManager#readme",
   "devDependencies": {
     "electron": "^1.4.1"
+  },
+  "dependencies": {
+    "image-size": "^0.5.1"
   }
 }

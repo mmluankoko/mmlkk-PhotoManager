@@ -4,32 +4,38 @@
     <meta charset="UTF-8">
     <title>Photo Manager</title>
     <link rel="stylesheet" href="./semantic/semantic.css">
+    <link rel="stylesheet" href="./css/menu.css">
     <link rel="stylesheet" href="./css/layout.css">
   </head>
   <body>
-    <div id="title"> Title here</div>
-    <div id="top">
-      <div class="ui attached segment">
-        <p>This segment is attached on both sides</p>
-      </div>
-    </div>
+    <div id="titlebar">Title here</div>
+
 
 
     <div id="body">
-      
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
     </div>
 
 
-    <div id="bot">
-      <div class="ui bottom attached segment">
-        <p>This segment is on bottom</p>
+    <div id="footer">
+      <div class="ui center aligned container">
+        <!-- <div class="ten wide column"> -->
+          <div class="ui buttons">
+            <div id="actual_btn" class="ui button compact">Actual Size</div>
+            <div id="zoomout_btn" class="ui button compact">&nbsp;&nbsp;<i class="zoom out icon"></i></div>
+            <div id="scale_btn" class="ui button compact"></div>
+            <div id="zoomin_btn" class="ui button compact">&nbsp;&nbsp;<i class="zoom icon"></i></div>
+            <div id="fit_btn" class="ui button compact">Fit Window</div>
+          </div>
+        <!-- </div> -->
       </div>
     </div>
 
   <script type="text/javascript">
     let $ = jQuery = require('./js/jquery.js');
+    let _ = require('./js/underscore.js');
     require('./semantic/semantic.js');
-    require('./js/index.js');
+    require('./js/viewer.js');
   </script>
   </body>
 </html>
