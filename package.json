@@ -1,0 +1,23 @@
+{
+  "name": "phtot_manager",
+  "version": "0.1.0",
+  "description": "Learn electron by building a photo manager desktop app.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mmluankoko/mmlkk-PhotoManager.git"
+  },
+  "author": "mmlkk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mmluankoko/mmlkk-PhotoManager/issues"
+  },
+  "homepage": "https://github.com/mmluankoko/mmlkk-PhotoManager#readme",
+  "devDependencies": {
+    "electron": "^1.4.1"
+  }
+}

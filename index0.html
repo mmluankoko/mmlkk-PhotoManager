@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Photo Manager</title>
+    <link rel="stylesheet" href="css/semantic/semantic.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div id="sidebar">
+        <div id="main_menu" class="ui secondary vertical pointing menu fluid">
+            <a class="item">Home </a>
+            <a class="item">Messages</a>
+            <a class="item active">Friends</a>
+        </div>
+        <div id="vs"></div>
+    </div>
+    <div id="main">
+        <div class="ui menu fluid">
+            <div id="size" class="ui buttons">
+              <button class="ui button">One</button>
+              <button class="ui button" value="small">Two</button>
+              <button class="ui button" value="large">Three</button>
+            </div>
+        </div>
+        <div id="images" class="ui small images">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+        </div>
+        <div style="height:300px;width:200px;background-color:grey;"></div>
+        <div style="height:500px;width:200px;background-color:red;"></div>
+    </div>
+
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="js/jquery-3.1.1.min.js" charset="utf-8"></script>
+    <script src="css/semantic/semantic.js" charset="utf-8"></script>
+    <script src="js/script.js" charset="utf-8"></script>
+    <script>if (window.module) module = window.module;</script>
+    require('./renderer.js')
+
+  </body>
+</html>

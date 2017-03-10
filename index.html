@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Photo Manager</title>
+    <link rel="stylesheet" href="./semantic/semantic.css">
+    <link rel="stylesheet" href="./css/menu.css">
+    <link rel="stylesheet" href="./css/layout.css">
+  </head>
+  <body>
+    <div id="titlebar">Title here</div>
+    <div id="header">
+      <div class="ui buttons">
+        <div class="ui button compact">&nbsp;&nbsp;<i class="zoom out icon"></i></div>
+        <div class="ui button compact">&nbsp;&nbsp;<i class="zoom icon"></i></div>
+      </div>
+      <div class="ui buttons right floated">
+        <div class="ui button compact">&nbsp;&nbsp;<i class="zoom out icon"></i></div>
+        <div class="ui button compact">&nbsp;&nbsp;<i class="zoom icon"></i></div>
+      </div>
+    </div>
+
+
+    <div id="body">
+      <div id="sidebar">
+        <div id="main_menu" class="ui secondary vertical pointing menu fluid">
+            <a class="item">Home </a>
+            <a class="item">Messages</a>
+            <a class="item active">Friends</a>
+        </div>
+        <div id="vs"></div>
+      </div>
+      <div id="main">
+        <div id="images" class="ui small images">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+            <img class="ui rounded image" src="image.png">
+        </div>
+      </div>
+    </div>
+
+
+    <div id="footer">
+      <div class="ui bottom attached segment">
+        <p>This segment is on bottom</p>
+      </div>
+    </div>
+
+  <script type="text/javascript">
+    let $ = jQuery = require('./js/jquery.js');
+    require('./semantic/semantic.js');
+    require('./js/index.js');
+  </script>
+  </body>
+</html>
