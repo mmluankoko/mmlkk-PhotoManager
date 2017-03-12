@@ -1,7 +1,11 @@
-var ipc = require('electron').ipcRenderer;
+const ipc = require('electron').ipcRenderer
+const fs = require('fs')
+const path = require('path')
+
 let oriWidth, oriHeight, imgWidth, imgHeight, svgWidth, svgHeight, x, y
-let svg, svgj, img, svgimg, scale_btnj, src
+let svg, svgj, img, svgimg, scale_btnj, prev_btnj, next_btnj, titlej
 let scale, zoomed
+let src, dirname, basename, images, curIndex
 
 ipc.on('img-src', (event, imgSrc) => {
   if (imgSrc)
@@ -10,30 +14,66 @@ ipc.on('img-src', (event, imgSrc) => {
 
 function init(imgSrc){
   src = imgSrc
-  scale_btnj = $('#scale_btn');
+  dirname = path.dirname(src)
+  basename = path.basename(src)
+  prev_btnj = $('#prev_btn')
+  next_btnj = $('#next_btn')
+  prev_btnj.addClass('loading')
+  next_btnj.addClass('loading')
+  scale_btnj = $('#scale_btn')
+  titlej = $('#title')
   svgj = $('svg')
   svg = svgj[0]
   svgimg = document.createElementNS('http://www.w3.org/2000/svg','image')
+  svgj.append(svgimg)
+  fs.readdir(dirname, (err, files) => {
+    if (!err){
+      console.log('files',files)
+      images = files.filter(isImage)
+      console.log('images',images)
+      curIndex = images.indexOf(basename)
+      loadImage()
+      prev_btnj.removeClass('loading')
+      next_btnj.removeClass('loading')
+      setBtn()
+    }
+  })
+
+
+  $(window).resize(_.throttle(resizeHandler, 100))
+  next_btnj.click(() => {
+    curIndex++
+    loadImage()
+    setBtn()
+  })
+  prev_btnj.click(() => {
+    curIndex--
+    loadImage()
+    setBtn()
+  })
+  $('#zoomin_btn').click(zoomin)
+  $('#zoomout_btn').click(zoomout)
+  $('#actual_btn').click(actual)
+  $('#fit_btn').click(fit)
+}
+
+function loadImage(){
+  console.log('loadImage', curIndex, images.length)
+  img = null
+  img = new Image()
   scale = 100
   zoomed = false
-  img = new Image()
-  img.src = src
+  basename = images[curIndex]
+  src = path.join(dirname,basename)
   img.src = src
   img.onload = () => {
-    zoomed = false
     setOriDim()
     setSvgDim()
     setDefaultScale()
     setImgDim()
     setImgPos()
     setImg()
-    svgj.append(svgimg)
   }
-  $(window).resize(_.throttle(resizeHandler, 100))
-  $('#zoomin_btn').click(zoomin)
-  $('#zoomout_btn').click(zoomout)
-  $('#actual_btn').click(actual)
-  $('#fit_btn').click(fit)
 }
 
 function setOriDim(){
@@ -83,11 +123,15 @@ function setImg(){
   svgimg.setAttributeNS(null,'y', y.toString())
   svgimg.setAttributeNS(null, 'visibility', 'visible')
   // svgimg.setAttributeNS(null, 'transform', 'rotate(45 '+x+' '+y+')')
-  setDisplay()
+  setScaleDisplay()
+  setTitle()
 }
 
-function setDisplay() {
+function setScaleDisplay() {
   scale_btnj.text(scale.toString()+'%')
+}
+function setTitle(){
+  titlej.text(basename)
 }
 
 function resizeHandler(){
@@ -130,4 +174,21 @@ function fit(){
   setImgDim()
   setImgPos()
   setImg()
+}
+
+function isImage(file){
+  let imgExts = ['png','jpg','png']
+  let ext = file.slice(file.lastIndexOf('.')+1).toLowerCase()
+  return imgExts.includes(ext)
+}
+
+function setBtn(){
+  if (curIndex==images.length-1){
+    next_btnj.addClass('disabled')
+  } else if (curIndex==0){
+    prev_btnj.addClass('disabled')
+  } else {
+    prev_btnj.removeClass('disabled')
+    next_btnj.removeClass('disabled')
+  }
 }

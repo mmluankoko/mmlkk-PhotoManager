@@ -9,6 +9,13 @@
   -webkit-user-select: none;
   /*border-bottom: 1px solid #c4c4c4;*/
 }
+#title{
+  margin: 0 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /*display: inline-block;*/
+}
 #header {
   position: fixed;
   top: 23px;
@@ -79,4 +86,34 @@ img {
 #scale_btn:hover {
   cursor: default;
   background-color: #E0E1E2;
+}
+
+.ui.titlebar.buttons {
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+.ui.titlebar.buttons .button,
+.ui.titlebar.button {
+  font-size: 0.65rem;
+  background-color: transparent;
+}
+.ui.titlebar.buttons .button:hover,
+.ui.titlebar.button:hover {
+  background-color: #CACBCD;
+  cursor: default;
+}
+.ui.titlebar.buttons .button:first-child {
+  border-left: none;
+  margin-left: 0em;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.ui.titlebar.buttons .button:last-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.ui.titlebar.buttons .button:last-child:hover {
+  background-color: #DB2828;
+  color: #ffffff;
 }

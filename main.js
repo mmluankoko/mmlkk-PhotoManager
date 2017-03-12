@@ -14,28 +14,32 @@ let indexWin, viewerWin
 
 function createWindow () {
   // Create the browser window.
-  indexWin = new BrowserWindow({width: 800, height: 600,
+  viewerWin = new BrowserWindow({width: 800, height: 600,
                            minWidth: 800, minHeight: 600,
                            frame: false, titleBarStyle: 'hidden',
-                           title: '', show: false})
-  indexWin.show()
-
+                           title: '', show: true})
   // and load the index.html of the app.
-  indexWin.loadURL(url.format({
+  viewerWin.loadURL(url.format({
     pathname: path.join(__dirname, 'viewer.html'),
     protocol: 'file:',
     slashes: true
   }))
 
+  // open system dialog for image's path
+  // let imgSrc = dialog.showOpenDialog({properties: ['openFile'],filters: [{name: 'Images', extensions: ['jpg', 'png', 'bmp']}]})
+  // if (imgSrc) {
+  //   viewerWin.webContents.send('img-src', imgSrc[0]);
+  // }
+
   // Open the DevTools.
-  indexWin.webContents.openDevTools()
+  // indexWin.webContents.openDevTools()
 
   // Emitted when the window is closed.
-  indexWin.on('closed', () => {
+  viewerWin.on('closed', () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    indexWin = null
+    viewerWin = null
   })
 }
 
@@ -46,9 +50,6 @@ app.on('ready', () => {
   const menu = Menu.buildFromTemplate(menuTemplate.getTemplate())
   Menu.setApplicationMenu(menu)
   createWindow();
-  let imgSrc = dialog.showOpenDialog({properties: ['openFile']})[0]
-  indexWin.webContents.send('img-src', imgSrc);
-
 })
 
 // Quit when all windows are closed.
@@ -63,7 +64,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (indexWin === null) {
+  if (viewerWin === null) {
     createWindow()
   }
 })
