@@ -2,7 +2,8 @@ const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const Menu = electron.Menu
-const dialog = require('electron').dialog
+const ipc = electron.ipcMain
+const dialog = electron.dialog
 
 const path = require('path')
 const url = require('url')
@@ -25,14 +26,15 @@ function createWindow () {
     slashes: true
   }))
 
+
   // open system dialog for image's path
-  // let imgSrc = dialog.showOpenDialog({properties: ['openFile'],filters: [{name: 'Images', extensions: ['jpg', 'png', 'bmp']}]})
-  // if (imgSrc) {
-  //   viewerWin.webContents.send('img-src', imgSrc[0]);
-  // }
+  let imgPath = dialog.showOpenDialog({properties: ['openFile'],filters: [{name: 'Images', extensions: ['jpg', 'png', 'bmp']}]})
+  if (imgPath) {
+    viewerWin.webContents.send('image-path', imgPath[0]);
+  }
 
   // Open the DevTools.
-  // indexWin.webContents.openDevTools()
+  viewerWin.webContents.openDevTools()
 
   // Emitted when the window is closed.
   viewerWin.on('closed', () => {
@@ -69,5 +71,11 @@ app.on('activate', () => {
   }
 })
 
+ipc.on('open-image-file', function (event) {
+  let imgPath = dialog.showOpenDialog({properties: ['openFile'],filters: [{name: 'Images', extensions: ['jpg', 'png', 'bmp']}]})
+  if (imgPath) {
+    viewerWin.webContents.send('image-path', imgPath[0]);
+  }
+})
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

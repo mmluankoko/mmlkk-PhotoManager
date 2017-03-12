@@ -1,5 +1,4 @@
 const win = require('electron').remote.getCurrentWindow()
-console.log(win)
 if (process.platform !== 'darwin') {
   let buttons = $('<div class="ui titlebar icon buttons"></div>')
   let b1 = $('<button class="ui button"><i class="window minimize icon"></i></button>')

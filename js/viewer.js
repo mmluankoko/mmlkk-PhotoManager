@@ -3,68 +3,72 @@ const fs = require('fs')
 const path = require('path')
 
 let oriWidth, oriHeight, imgWidth, imgHeight, svgWidth, svgHeight, x, y
-let svg, svgj, img, svgimg, scale_btnj, prev_btnj, next_btnj, titlej
+let svg, svgj, img, svgimg, scale_btnj, prev_btnj, next_btnj, titlej, openj
 let scale, zoomed
 let src, dirname, basename, images, curIndex
 
-ipc.on('img-src', (event, imgSrc) => {
-  if (imgSrc)
-    init(imgSrc)
+init()
+ipc.on('image-path', (event, imgPath) => {
+  if (imgPath){
+    dirname = path.dirname(imgPath)
+    basename = path.basename(imgPath)
+    loadImage(1)
+    loadImages()
+  }
 })
 
-function init(imgSrc){
-  src = imgSrc
-  dirname = path.dirname(src)
-  basename = path.basename(src)
+/**
+ * initialize global variables, set button actions, ipc callbacks
+ */
+function init(){
+  // initialize global variables and button actions
   prev_btnj = $('#prev_btn')
   next_btnj = $('#next_btn')
-  prev_btnj.addClass('loading')
-  next_btnj.addClass('loading')
   scale_btnj = $('#scale_btn')
   titlej = $('#title')
   svgj = $('svg')
   svg = svgj[0]
   svgimg = document.createElementNS('http://www.w3.org/2000/svg','image')
+
   svgj.append(svgimg)
+  $('#open_btn').click(openHandler)
+  $('#zoomin_btn').click(zoominHandler)
+  $('#zoomout_btn').click(zoomoutHandler)
+  $('#actual_btn').click(actualHandler)
+  $('#fit_btn').click(fitHandler)
+  prev_btnj.click(prevHandler)
+  next_btnj.click(nextHandler)
+  $(window).resize(_.throttle(resizeHandler, 100))
+}
+
+/**
+ * Load the list of all images in the same dir.
+ */
+function loadImages(){
+  prev_btnj.addClass('loading')
+  next_btnj.addClass('loading')
   fs.readdir(dirname, (err, files) => {
     if (!err){
-      console.log('files',files)
       images = files.filter(isImage)
-      console.log('images',images)
       curIndex = images.indexOf(basename)
-      loadImage()
       prev_btnj.removeClass('loading')
       next_btnj.removeClass('loading')
       setBtn()
     }
   })
-
-
-  $(window).resize(_.throttle(resizeHandler, 100))
-  next_btnj.click(() => {
-    curIndex++
-    loadImage()
-    setBtn()
-  })
-  prev_btnj.click(() => {
-    curIndex--
-    loadImage()
-    setBtn()
-  })
-  $('#zoomin_btn').click(zoomin)
-  $('#zoomout_btn').click(zoomout)
-  $('#actual_btn').click(actual)
-  $('#fit_btn').click(fit)
 }
 
-function loadImage(){
-  console.log('loadImage', curIndex, images.length)
-  img = null
+/**
+ * Update global basename according to curIndex iff firstLoad is not undefined.
+ * Then update global basename and load image.
+ */
+function loadImage(firstLoad){
   img = new Image()
-  scale = 100
   zoomed = false
-  basename = images[curIndex]
-  src = path.join(dirname,basename)
+  if (!firstLoad){
+    basename = images[curIndex]
+  }
+  src = path.join(dirname, basename)
   img.src = src
   img.onload = () => {
     setOriDim()
@@ -72,7 +76,8 @@ function loadImage(){
     setDefaultScale()
     setImgDim()
     setImgPos()
-    setImg()
+    updateImg()
+    setTitle()
   }
 }
 
@@ -115,7 +120,7 @@ function setImgPos(){
   y = (svgHeight - imgHeight)/2
 }
 
-function setImg(){
+function updateImg(){
   svgimg.setAttributeNS(null,'height', imgHeight.toString())
   svgimg.setAttributeNS(null,'width', imgWidth.toString())
   svgimg.setAttributeNS('http://www.w3.org/1999/xlink','href', src)
@@ -124,7 +129,6 @@ function setImg(){
   svgimg.setAttributeNS(null, 'visibility', 'visible')
   // svgimg.setAttributeNS(null, 'transform', 'rotate(45 '+x+' '+y+')')
   setScaleDisplay()
-  setTitle()
 }
 
 function setScaleDisplay() {
@@ -139,41 +143,57 @@ function resizeHandler(){
   if (!zoomed) {setDefaultScale()}
   setImgDim()
   setImgPos()
-  setImg()
+  updateImg()
 }
 
-function zoomin(){
+function zoominHandler(){
   zoomed = true
   scale += 10
   scale = (scale > 1000) ? 1000 : scale
   setImgDim()
   setImgPos()
-  setImg()
+  updateImg()
 }
 
-function zoomout(){
+function zoomoutHandler(){
   zoomed = true
   scale -= 10
   scale = (scale < 1) ? 1 : scale
   setImgDim()
   setImgPos()
-  setImg()
+  updateImg()
 }
 
-function actual(){
+function actualHandler(){
   zoomed = true
   setOriScale()
   setImgDim()
   setImgPos()
-  setImg()
+  updateImg()
 }
 
-function fit(){
-  zoomed = false
+function fitHandler(){
+  zoomed = true
   setFitScale()
   setImgDim()
   setImgPos()
-  setImg()
+  updateImg()
+}
+
+function prevHandler(){
+  curIndex--
+  loadImage()
+  setBtn()
+}
+
+function nextHandler(){
+  curIndex++
+  loadImage()
+  setBtn()
+}
+
+function openHandler(){
+  ipc.send('open-image-file')
 }
 
 function isImage(file){
@@ -185,10 +205,12 @@ function isImage(file){
 function setBtn(){
   if (curIndex==images.length-1){
     next_btnj.addClass('disabled')
-  } else if (curIndex==0){
+  } else {
+    next_btnj.removeClass('disabled')
+  }
+  if (curIndex==0){
     prev_btnj.addClass('disabled')
   } else {
     prev_btnj.removeClass('disabled')
-    next_btnj.removeClass('disabled')
   }
 }
